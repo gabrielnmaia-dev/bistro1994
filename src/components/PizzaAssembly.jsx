@@ -7,6 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 /**
  * PizzaAssembly — seção pinned com animação de montagem da pizza por fatias.
  * Lê as fatias em /public/pizza/pizza.json.
+ * Suporta o novo formato: { pizza-calabresa: { fatias: [...] }, pizza-chocolate: { fatias: [...] } }
  */
 export default function PizzaAssembly() {
   const containerRef = useRef(null);
@@ -29,7 +30,10 @@ export default function PizzaAssembly() {
       try {
         const res = await fetch("/pizza/pizza.json");
         const data = await res.json();
-        setSlices(data.slices || []);
+        // Novo formato: data.pizza-calabresa.fatias é o array de fatias
+        const calabresa = data["pizza-calabresa"] || {};
+        const fatias = calabresa.fatias || [];
+        setSlices(fatias);
       } catch (e) {
         console.error("Erro ao carregar pizza.json:", e);
       }
@@ -67,11 +71,19 @@ export default function PizzaAssembly() {
       const img = sliceRefs.current[i];
       if (!img) return;
 
+      // saidaX/saidaY no novo JSON são frações (ex: 0.383, -0.924), converte para px
+      const offsetX = typeof slice.saidaX === "number" && slice.saidaX < 1
+        ? slice.saidaX * 600
+        : slice.saidaX || -300;
+      const offsetY = typeof slice.saidaY === "number" && slice.saidaY < 1
+        ? slice.saidaY * 600
+        : slice.saidaY || -300;
+
       tl.fromTo(
         img,
         {
-          x: slice.saidaX || -300,
-          y: slice.saidaY || -300,
+          x: offsetX,
+          y: offsetY,
           opacity: 0,
           rotation: i % 2 === 0 ? -25 : 25,
         },
@@ -114,6 +126,9 @@ export default function PizzaAssembly() {
             alt={`Fatia ${i + 1} da pizza de ${pizzaNames[currentPizza]}`}
             className="absolute top-0 left-0 w-full h-full object-contain pizza-slice"
             style={{ zIndex: slices.length - i }}
+            onError={(e) => {
+              e.currentTarget.src = `/pizza/pizza-calabresa.webp`;
+            }}
           />
         ))}
 

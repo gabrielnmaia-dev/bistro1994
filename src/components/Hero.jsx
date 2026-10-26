@@ -2,7 +2,6 @@ import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getBusinessHours } from "../lib/hours";
-import config from "../config";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -35,6 +34,9 @@ export default function Hero() {
           className="w-full h-full object-cover"
           loading="eager"
           decoding="async"
+          onError={(e) => {
+            e.currentTarget.src = "/photos/hamburguer-close.webp";
+          }}
         />
         <div className="absolute inset-0 bg-oil-dark/70" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(11,43,38,0.9)_80%)]" />

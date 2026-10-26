@@ -7,7 +7,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 /**
  * BurgerAssembly — seção pinned com animação de montagem do hambúrguer.
- * Lê as camadas em /public/burger/layers.json e monta as camadas no scroll.
+ * Lê as camadas em /public/burger/layers.json.
+ * Suporta tanto o formato antigo ({ layers: [...] }) quanto o novo
+ * ({ canvas, stack, layers: [...] }).
  */
 export default function BurgerAssembly() {
   const containerRef = useRef(null);
@@ -27,7 +29,9 @@ export default function BurgerAssembly() {
       try {
         const res = await fetch("/burger/layers.json");
         const data = await res.json();
-        setLayers(data.layers || []);
+        // Suporte ao novo formato: data.layers é o array de camadas
+        const camadas = data.layers || [];
+        setLayers(camadas);
       } catch (e) {
         console.error("Erro ao carregar layers do hambúrguer:", e);
       }
@@ -94,7 +98,7 @@ export default function BurgerAssembly() {
       );
     });
 
-    // No fim: leve zoom + fade out das camadas de texto
+    // No fim: fade out dos textos de camada
     tl.to(
       container.querySelectorAll(".layer-text"),
       { opacity: 0, duration: 0.5 },
@@ -109,7 +113,7 @@ export default function BurgerAssembly() {
 
   if (!layers.length) {
     return (
-      <section className="py-32 md:py-64 text-center">
+      <section className="py-32 md:py-64 text-center bg-oil-dark">
         <p className="text-cream/50">Carregando montagem do hambúrguer...</p>
       </section>
     );
@@ -126,10 +130,10 @@ export default function BurgerAssembly() {
       <div className="relative z-10 flex items-center justify-center w-full h-[calc(100vh-4rem)] md:h-[calc(100vh-6rem)] px-4 md:px-8">
         {layers.map((layer, i) => (
           <img
-            key={layer.name}
+            key={layer.file}
             ref={(el) => (layersRef.current[i] = el)}
             src={`/burger/${layer.file}`}
-            alt={`Camada ${i + 1}: ${layer.name}`}
+            alt={`Camada ${i + 1}: ${layer.file}`}
             className="absolute top-0 left-0 w-full h-full object-contain layer-img"
             style={{
               zIndex: layers.length - i,
