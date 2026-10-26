@@ -45,6 +45,7 @@ export function getBusinessHours() {
     nowMinutes: minutes,
     openMinutes,
     closeMinutes,
+    openDays: HOURS_CONFIG.openDays,
   };
 }
 
@@ -58,4 +59,4 @@ export function getTodayLabel() {
   return DAY_LABELS[now.getDay()];
 }
 
-export { DAY_LABELS };
+export { DAY_LABELS, HOURS_CONFIG };

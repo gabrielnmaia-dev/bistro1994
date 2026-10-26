@@ -1,13 +1,8 @@
 import config from "../config";
 
 export default function MobileCTA() {
-  if (typeof window === "undefined") return null;
-
-  const isMobile = window.innerWidth <= 768;
-  if (!isMobile) return null;
-
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-oil/90 backdrop-blur-md border-t border-gold/20">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-oil/90 backdrop-blur-md border-t border-gold/20">
       <div className="flex justify-around px-4 py-3">
         <a
           href={config.orderLink}

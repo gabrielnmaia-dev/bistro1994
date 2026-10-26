@@ -44,72 +44,71 @@ export default function PizzaAssembly() {
   useEffect(() => {
     if (!slices.length) return;
 
-    const container = containerRef.current;
+    const ctx = gsap.context(() => {
+      const container = containerRef.current;
 
-    // Pin da seção — primeiro a calabresa
-    ScrollTrigger.create({
-      trigger: container,
-      start: "top top",
-      end: "+=400%",
-      pin: true,
-      pinSpacing: true,
-      anticipatePin: 1,
-    });
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
+      // Pin da seção — primeiro a calabresa
+      ScrollTrigger.create({
         trigger: container,
         start: "top top",
         end: "+=400%",
-        scrub: 1,
-        snap: 1 / 2, // dois momentos: calabresa e chocolate
-      },
-    });
+        pin: true,
+        pinSpacing: true,
+        anticipatePin: 1,
+      });
 
-    // Anima as fatias da primeira pizza (calabresa)
-    slices.forEach((slice, i) => {
-      const img = sliceRefs.current[i];
-      if (!img) return;
-
-      // saidaX/saidaY no novo JSON são frações (ex: 0.383, -0.924), converte para px
-      const offsetX = typeof slice.saidaX === "number" && slice.saidaX < 1
-        ? slice.saidaX * 600
-        : slice.saidaX || -300;
-      const offsetY = typeof slice.saidaY === "number" && slice.saidaY < 1
-        ? slice.saidaY * 600
-        : slice.saidaY || -300;
-
-      tl.fromTo(
-        img,
-        {
-          x: offsetX,
-          y: offsetY,
-          opacity: 0,
-          rotation: i % 2 === 0 ? -25 : 25,
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: "+=400%",
+          scrub: 1,
+          snap: 1 / 2, // dois momentos: calabresa e chocolate
         },
-        {
-          x: 0,
-          y: 0,
-          opacity: 1,
-          rotation: 0,
-          ease: "none",
-          duration: 1,
-        },
-        i * 0.08 // stagger entre fatias
+      });
+
+      // Anima as fatias da primeira pizza (calabresa)
+      slices.forEach((slice, i) => {
+        const img = sliceRefs.current[i];
+        if (!img) return;
+
+        // saidaX/saidaY no novo JSON são frações (ex: 0.383, -0.924), converte para px
+        const offsetX = typeof slice.saidaX === "number" && Math.abs(slice.saidaX) <= 1.5
+          ? slice.saidaX * 600
+          : slice.saidaX || -300;
+        const offsetY = typeof slice.saidaY === "number" && Math.abs(slice.saidaY) <= 1.5
+          ? slice.saidaY * 600
+          : slice.saidaY || -300;
+
+        tl.fromTo(
+          img,
+          {
+            x: offsetX,
+            y: offsetY,
+            opacity: 0,
+            rotation: i % 2 === 0 ? -25 : 25,
+          },
+          {
+            x: 0,
+            y: 0,
+            opacity: 1,
+            rotation: 0,
+            ease: "none",
+            duration: 1,
+          },
+          i * 0.08 // stagger entre fatias
+        );
+      });
+
+      // Crossfade para a pizza de chocolate no meio do scroll
+      tl.to(
+        ".pizza-slice",
+        { opacity: 0, duration: 0.4 },
+        "+=0.5"
       );
-    });
+    }, containerRef);
 
-    // Crossfade para a pizza de chocolate no meio do scroll
-    tl.to(
-      container.querySelectorAll(".pizza-slice"),
-      { opacity: 0, duration: 0.4 },
-      "+=0.5"
-    );
-
-    return () => {
-      tl.kill();
-      ScrollTrigger.get().forEach((st) => st.kill());
-    };
+    return () => ctx.revert();
   }, [slices]);
 
   return (

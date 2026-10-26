@@ -42,73 +42,77 @@ export default function BurgerAssembly() {
   useEffect(() => {
     if (!layers.length) return;
 
-    const container = containerRef.current;
+    const ctx = gsap.context(() => {
+      const container = containerRef.current;
 
-    // Pin da seção
-    ScrollTrigger.create({
-      trigger: container,
-      start: "top top",
-      end: "+=300%",
-      pin: true,
-      pinSpacing: true,
-      anticipatePin: 1,
-    });
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
+      // Pin da seção
+      ScrollTrigger.create({
         trigger: container,
         start: "top top",
         end: "+=300%",
-        scrub: 1,
-        snap: 1 / (layers.length - 1),
-        onUpdate: (self) => {
-          const progress = self.progress;
-          const index = Math.min(
-            Math.round(progress * (layers.length - 1)),
-            layers.length - 1
-          );
-          setActiveLayer(index);
-        },
-      },
-    });
+        pin: true,
+        pinSpacing: true,
+        anticipatePin: 1,
+      });
 
-    // Cada camada começa acima, opacity 0 e rotação leve, cai até translateY(0)
-    layers.forEach((layer, i) => {
-      const img = layersRef.current[i];
-      if (!img) return;
-
-      const startY = -window.innerHeight * 0.6;
-      const rot = i % 2 === 0 ? -8 : 8;
-
-      tl.fromTo(
-        img,
-        {
-          y: startY,
-          opacity: 0,
-          rotation: rot,
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: "+=300%",
+          scrub: 1,
+          snap: 1 / (layers.length - 1),
+          onUpdate: (self) => {
+            const progress = self.progress;
+            const index = Math.min(
+              Math.round(progress * (layers.length - 1)),
+              layers.length - 1
+            );
+            setActiveLayer(index);
+          },
         },
-        {
-          y: 0,
-          opacity: 1,
-          rotation: 0,
-          ease: "none",
-          duration: 1,
-        },
-        i * 0.15
+      });
+
+      // Camada 0 (pão de baixo) é a base inicial; as camadas seguintes caem sobre ela
+      layers.forEach((layer, i) => {
+        const img = layersRef.current[i];
+        if (!img) return;
+
+        if (i === 0) {
+          gsap.set(img, { y: 0, opacity: 1, rotation: 0 });
+          return;
+        }
+
+        const startY = -window.innerHeight * 0.7;
+        const rot = i % 2 === 0 ? -10 : 10;
+
+        tl.fromTo(
+          img,
+          {
+            y: startY,
+            opacity: 0,
+            rotation: rot,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            rotation: 0,
+            ease: "none",
+            duration: 1,
+          },
+          (i - 1) * 0.35
+        );
+      });
+
+      // No fim: fade out dos textos de camada
+      tl.to(
+        ".layer-text",
+        { opacity: 0, duration: 0.5 },
+        "+=0.2"
       );
-    });
+    }, containerRef);
 
-    // No fim: fade out dos textos de camada
-    tl.to(
-      container.querySelectorAll(".layer-text"),
-      { opacity: 0, duration: 0.5 },
-      "+=0.2"
-    );
-
-    return () => {
-      tl.kill();
-      ScrollTrigger.get().forEach((st) => st.kill());
-    };
+    return () => ctx.revert();
   }, [layers]);
 
   if (!layers.length) {
@@ -136,7 +140,13 @@ export default function BurgerAssembly() {
             alt={`Camada ${i + 1}: ${layer.file}`}
             className="absolute top-0 left-0 w-full h-full object-contain layer-img"
             style={{
-              zIndex: layers.length - i,
+              zIndex: i + 1,
+            }}
+            onError={(e) => {
+              if (layer.fallbackPng && !e.currentTarget.dataset.fallback) {
+                e.currentTarget.dataset.fallback = "true";
+                e.currentTarget.src = `/burger/${layer.fallbackPng}`;
+              }
             }}
           />
         ))}

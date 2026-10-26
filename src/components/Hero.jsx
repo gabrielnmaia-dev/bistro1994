@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getBusinessHours } from "../lib/hours";
+import config from "../config";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,28 +16,29 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    gsap.from(ref.current.querySelectorAll(".hero-layer"), {
-      y: 100,
-      opacity: 0,
-      duration: 1.2,
-      stagger: 0.15,
-      ease: "power4.out",
-    });
+    const ctx = gsap.context(() => {
+      gsap.from(".hero-layer", {
+        y: 60,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.1,
+        ease: "power3.out",
+      });
+    }, ref);
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    <section className="relative min-h-[70vh] md:min-h-[90vh] overflow-hidden">
+    <section ref={ref} className="relative min-h-[70vh] md:min-h-[90vh] overflow-hidden">
       {/* Hero background image */}
       <div className="absolute inset-0 z-0">
         <img
-          src="/photos/hero-fallback.webp"
+          src="/photos/hamburguer-close.webp"
           alt="Fundo do hero - hamburguer artesanal"
           className="w-full h-full object-cover"
           loading="eager"
           decoding="async"
-          onError={(e) => {
-            e.currentTarget.src = "/photos/hamburguer-close.webp";
-          }}
         />
         <div className="absolute inset-0 bg-oil-dark/70" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(11,43,38,0.9)_80%)]" />
@@ -45,7 +47,7 @@ export default function Hero() {
       {/* Content */}
       <div className="relative z-10 w-full h-full flex flex-col justify-center px-4 md:px-8 sm:px-12 pt-20 pb-12 md:pt-32">
         {/* Logo */}
-        <div className="flex justify-center mb-12">
+        <div className="flex justify-center mb-12 hero-layer">
           <a href="/" className="inline-flex items-center gap-2 text-gold transition-transform hover:scale-105 duration-300">
             <svg
               width="36"
@@ -63,22 +65,31 @@ export default function Hero() {
 
         {/* Main text */}
         <div className="relative max-w-full text-center space-y-6">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 text-gold text-xs uppercase tracking-widest font-bold shadow-[0_0_15px_rgba(245,168,0,0.3)] animate-pulse">
-            {config.hero.badge}
-          </span>
+          <div className="hero-layer">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 text-gold text-xs uppercase tracking-widest font-bold shadow-[0_0_15px_rgba(245,168,0,0.3)] animate-pulse">
+              {config.hero.badge}
+            </span>
+          </div>
 
-          <h1 className="text-5xl md:text-8xl lg:text-[10rem] font-display uppercase text-cream leading-tight mb-4 drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
-            {config.hero.title.split(config.hero.titleHighlight).map((part, i) => (
-              <span key={i} className={i % 2 === 0 ? "" : "text-fire italic drop-shadow-[0_2px_4px_rgba(255,138,0,0.4)]"}>
-                {i % 2 === 0 ? part : config.hero.titleHighlight}
-              </span>
-            ))}
+          <h1 className="hero-layer text-5xl md:text-8xl lg:text-[10rem] font-display uppercase text-cream leading-tight mb-4 drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
+            {(() => {
+              const parts = config.hero.title.split(config.hero.titleHighlight);
+              return (
+                <>
+                  {parts[0]}
+                  <span className="text-fire italic drop-shadow-[0_2px_4px_rgba(255,138,0,0.4)]">
+                    {config.hero.titleHighlight}
+                  </span>
+                  {parts[1] || ""}
+                </>
+              );
+            })()}
           </h1>
-          <p className="text-2xl md:text-4xl font-serif italic text-fire drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
+          <p className="hero-layer text-2xl md:text-4xl font-serif italic text-fire drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
             {config.hero.subtitle}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+          <div className="hero-layer flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
             <a href={config.hero.primaryCta.href} className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-gold text-oil-dark font-bold uppercase tracking-widest text-sm md:text-base rounded-none hover:bg-fire transition-colors duration-300 shadow-[0_0_20px_rgba(245,168,0,0.4)]">
               {config.hero.primaryCta.label}
               <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
@@ -90,7 +101,7 @@ export default function Hero() {
           </div>
 
           {/* Status */}
-          <div className="mt-10 flex items-center justify-center gap-3 animate-bounce">
+          <div className="hero-layer mt-10 flex items-center justify-center gap-3 animate-bounce">
             <div className={`w-3 h-3 rounded-full ${isOpen ? "bg-gold" : "bg-fire"} shadow-[0_0_12px_${isOpen ? "rgba(245,168,0,0.6)" : "rgba(255,138,0,0.6)"}]`} />
             <span className={`text-xs uppercase tracking-widest font-bold ${isOpen ? "text-gold" : "text-fire"} opacity-90`}>
               {isOpen ? config.hours.openLabel : config.hours.closedLabel}
@@ -100,7 +111,7 @@ export default function Hero() {
             </span>
           </div>
 
-          <p className="mt-8 text-gold/50 text-sm tracking-[0.3em] uppercase opacity-0 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-700">
+          <p className="hero-layer mt-8 text-gold/50 text-sm tracking-[0.3em] uppercase">
             {config.hero.scrollHint} ↓
           </p>
         </div>

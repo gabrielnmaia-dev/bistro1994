@@ -9,21 +9,22 @@ export default function Testimonials() {
   const ref = useRef(null);
 
   useEffect(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ref.current,
-        start: "top 80%",
-        toggleActions: "play none none reverse",
-      },
-    });
+    const ctx = gsap.context(() => {
+      gsap.from(".testimonial-card", {
+        scrollTrigger: {
+          trigger: ref.current,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+        y: 60,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: "power3.out",
+      });
+    }, ref);
 
-    tl.from(ref.current.querySelectorAll(".testimonial-card"), {
-      y: 60,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: "power3.out",
-    });
+    return () => ctx.revert();
   }, []);
 
   return (

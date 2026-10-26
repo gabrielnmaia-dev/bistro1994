@@ -39,7 +39,7 @@ export default function Location() {
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
               <button
                 className="px-6 py-3 bg-gold text-oil-dark font-bold uppercase tracking-widest text-sm rounded-none hover:bg-fire transition-colors"
-                onClick={() => window.open(config.MAPS_LINK, "_blank")}
+                onClick={() => window.open(config.mapsLink, "_blank")}
               >
                 Abrir no Google Maps
               </button>
@@ -53,7 +53,7 @@ export default function Location() {
               <p className="text-cream text-lg mb-2">
                 <span className="block text-gold/60 text-xs uppercase tracking-widest">endereço</span>
                 <a
-                  href={config.MAPS_LINK}
+                  href={config.mapsLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-cream hover:text-gold transition-colors underline underline-offset-4"
@@ -75,15 +75,17 @@ export default function Location() {
             <div className="p-6 rounded-3xl bg-oil-dark border border-gold/10">
               <h3 className="text-xl font-serif italic text-fire mb-4 uppercase">funcionamento</h3>
               <div className="space-y-2">
-                {DAY_LABELS.map((day) => {
-                  const isOpen = hours?.openDays.includes(new Date(`${day} 2024`).getDay());
+                {DAY_LABELS.map((day, index) => {
+                  const isOpen = (hours?.openDays || [0, 2, 3, 4, 5, 6]).includes(index);
+                  const openTime = hours?.openTime || config.hours.openTime;
+                  const closeTime = hours?.closeTime || config.hours.closeTime;
                   return (
                     <div key={day} className="flex justify-between items-center text-sm text-cream/80">
                       <span className={day === today ? "font-bold text-cream" : "text-cream/60"}>
                         {day}
                       </span>
                       <span className={day === today ? "font-mono text-gold" : "text-cream/50"}>
-                        {isOpen ? `${formatHour(hours.openTime)} – ${formatHour(hours.closeTime)}` : "Fechado"}
+                        {isOpen ? `${formatHour(openTime)} – ${formatHour(closeTime)}` : "Fechado"}
                       </span>
                     </div>
                   );
@@ -96,10 +98,10 @@ export default function Location() {
 
             <div className="flex gap-3">
               <a
-                href={config.MAPS_LINK}
+                href={config.mapsLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 px-6 py-3 bg-gold text-oil-dark font-bold uppercase tracking-widest text-sm rounded-none hover:bg-fire transition-colors"
+                className="flex-1 px-6 py-3 bg-gold text-oil-dark font-bold uppercase tracking-widest text-sm rounded-none hover:bg-fire transition-colors text-center"
               >
                 Abrir no Google Maps
               </a>
@@ -107,7 +109,7 @@ export default function Location() {
                 href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(config.address.full)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 px-6 py-3 border border-gold/40 text-gold font-bold uppercase tracking-widest text-sm rounded-none hover:bg-gold/10 transition-colors backdrop-blur-sm"
+                className="flex-1 px-6 py-3 border border-gold/40 text-gold font-bold uppercase tracking-widest text-sm rounded-none hover:bg-gold/10 transition-colors backdrop-blur-sm text-center"
               >
                 Traçar rota
               </a>
