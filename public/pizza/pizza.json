@@ -1,0 +1,114 @@
+{
+  "pizza-calabresa": {
+    "file": "pizza-calabresa.webp",
+    "fallbackPng": "pizza-calabresa.png",
+    "width": 611,
+    "height": 376,
+    "fatias": [
+      {
+        "file": "pizza-calabresa-fatia-1.webp",
+        "anguloMeioGraus": 22.5,
+        "saidaX": 0.383,
+        "saidaY": -0.924
+      },
+      {
+        "file": "pizza-calabresa-fatia-2.webp",
+        "anguloMeioGraus": 67.5,
+        "saidaX": 0.924,
+        "saidaY": -0.383
+      },
+      {
+        "file": "pizza-calabresa-fatia-3.webp",
+        "anguloMeioGraus": 112.5,
+        "saidaX": 0.924,
+        "saidaY": 0.383
+      },
+      {
+        "file": "pizza-calabresa-fatia-4.webp",
+        "anguloMeioGraus": 157.5,
+        "saidaX": 0.383,
+        "saidaY": 0.924
+      },
+      {
+        "file": "pizza-calabresa-fatia-5.webp",
+        "anguloMeioGraus": 202.5,
+        "saidaX": -0.383,
+        "saidaY": 0.924
+      },
+      {
+        "file": "pizza-calabresa-fatia-6.webp",
+        "anguloMeioGraus": 247.5,
+        "saidaX": -0.924,
+        "saidaY": 0.383
+      },
+      {
+        "file": "pizza-calabresa-fatia-7.webp",
+        "anguloMeioGraus": 292.5,
+        "saidaX": -0.924,
+        "saidaY": -0.383
+      },
+      {
+        "file": "pizza-calabresa-fatia-8.webp",
+        "anguloMeioGraus": 337.5,
+        "saidaX": -0.383,
+        "saidaY": -0.924
+      }
+    ]
+  },
+  "pizza-chocolate": {
+    "file": "pizza-chocolate.webp",
+    "fallbackPng": "pizza-chocolate.png",
+    "width": 414,
+    "height": 306,
+    "fatias": [
+      {
+        "file": "pizza-chocolate-fatia-1.webp",
+        "anguloMeioGraus": 22.5,
+        "saidaX": 0.383,
+        "saidaY": -0.924
+      },
+      {
+        "file": "pizza-chocolate-fatia-2.webp",
+        "anguloMeioGraus": 67.5,
+        "saidaX": 0.924,
+        "saidaY": -0.383
+      },
+      {
+        "file": "pizza-chocolate-fatia-3.webp",
+        "anguloMeioGraus": 112.5,
+        "saidaX": 0.924,
+        "saidaY": 0.383
+      },
+      {
+        "file": "pizza-chocolate-fatia-4.webp",
+        "anguloMeioGraus": 157.5,
+        "saidaX": 0.383,
+        "saidaY": 0.924
+      },
+      {
+        "file": "pizza-chocolate-fatia-5.webp",
+        "anguloMeioGraus": 202.5,
+        "saidaX": -0.383,
+        "saidaY": 0.924
+      },
+      {
+        "file": "pizza-chocolate-fatia-6.webp",
+        "anguloMeioGraus": 247.5,
+        "saidaX": -0.924,
+        "saidaY": 0.383
+      },
+      {
+        "file": "pizza-chocolate-fatia-7.webp",
+        "anguloMeioGraus": 292.5,
+        "saidaX": -0.924,
+        "saidaY": -0.383
+      },
+      {
+        "file": "pizza-chocolate-fatia-8.webp",
+        "anguloMeioGraus": 337.5,
+        "saidaX": -0.383,
+        "saidaY": -0.924
+      }
+    ]
+  }
+}

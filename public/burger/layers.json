@@ -1,0 +1,33 @@
+{
+  "canvas": {
+    "width": 903,
+    "height": 739
+  },
+  "stack": "bottom-to-top",
+  "layers": [
+    {
+      "file": "01-pao-baixo.webp",
+      "fallbackPng": "01-pao-baixo.png",
+      "visibleTopY": 537,
+      "visibleBottomY": 731
+    },
+    {
+      "file": "02-alface-tomate.webp",
+      "fallbackPng": "02-alface-tomate.png",
+      "visibleTopY": 408,
+      "visibleBottomY": 586
+    },
+    {
+      "file": "03-hamburguer-cheddar.webp",
+      "fallbackPng": "03-hamburguer-cheddar.png",
+      "visibleTopY": 344,
+      "visibleBottomY": 483
+    },
+    {
+      "file": "04-pao-cima.webp",
+      "fallbackPng": "04-pao-cima.png",
+      "visibleTopY": 5,
+      "visibleBottomY": 349
+    }
+  ]
+}
