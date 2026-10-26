@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import config from "../config";
+import { trackEvent } from "../lib/track";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -366,6 +367,11 @@ export default function BurgerAssembly() {
       >
         <a
           href={config.orderLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() =>
+            trackEvent("pedir_takeat", { origem: "montagem_hamburguer" })
+          }
           className="inline-flex items-center gap-2 bg-fire px-8 py-4 text-sm font-bold uppercase tracking-widest text-cream shadow-[0_0_25px_rgba(255,138,0,0.5)] transition-colors duration-300 hover:bg-gold md:text-base"
         >
           Peça o seu 🍔

@@ -1,4 +1,5 @@
 import config from "../config";
+import { trackEvent } from "../lib/track";
 
 export default function MobileCTA() {
   return (
@@ -8,6 +9,9 @@ export default function MobileCTA() {
           href={config.orderLink}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() =>
+            trackEvent("pedir_takeat", { origem: "mobile_cta" })
+          }
           className="flex flex-col items-center gap-1 text-gold font-bold uppercase text-[10px] hover:text-fire transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>

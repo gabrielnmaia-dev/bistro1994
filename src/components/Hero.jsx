@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getBusinessHours } from "../lib/hours";
+import { trackEvent } from "../lib/track";
 import config from "../config";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -94,6 +95,9 @@ export default function Hero() {
               href={config.hero.primaryCta.href}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() =>
+                trackEvent("pedir_takeat", { origem: "hero_principal" })
+              }
               className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-gold text-oil-dark font-bold uppercase tracking-widest text-sm md:text-base rounded-none hover:bg-fire transition-colors duration-300 shadow-[0_0_20px_rgba(245,168,0,0.4)]"
             >
               {config.hero.primaryCta.label}

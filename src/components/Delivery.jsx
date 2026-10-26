@@ -1,4 +1,5 @@
 import config from "../config";
+import { trackEvent } from "../lib/track";
 
 export default function Delivery() {
   return (
@@ -18,6 +19,9 @@ export default function Delivery() {
                 href={config.orderLink}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  trackEvent("pedir_takeat", { origem: "delivery" })
+                }
                 className="inline-flex items-center gap-2 px-8 py-3 bg-gold text-oil-dark font-bold uppercase tracking-widest text-sm hover:bg-fire transition-colors duration-300 shadow-[0_0_20px_rgba(245,168,0,0.4)]"
               >
                 Pedir pelo delivery

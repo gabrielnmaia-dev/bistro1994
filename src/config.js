@@ -5,7 +5,9 @@
  *  editáveis ficam nesta página. Basta editar e refazer deploy.
  * ============================================================ */
 
-export const ORDER_LINK = "https://pedido.takeat.app/bistro1994";
+export const TAKEAT_URL =
+  "https://pedido.takeat.app/bistro1994?utm_source=site&utm_medium=landing";
+export const ORDER_LINK = TAKEAT_URL;
 export const INSTAGRAM_LINK = "https://www.instagram.com/bistro1994_matureia";
 export const MAPS_LINK = "https://www.google.com/maps/search/?api=1&query=Av.+Jos%C3%A9+Jer%C3%B4nimo+da+Silva%2C+736%2C+Matur%C3%A9ia+-+PB%2C+58737-000";
 export const WHATSAPP_NUMBER = "5583998752113"; // 55 (Brasil) + DDD (83) + número do Bistrô1994
@@ -108,6 +110,8 @@ export const config = {
     title: "NOSSO CARDÁPIO",
     subtitle: "Hambúrgueres artesanais, porções, pratos regionais e sobremesas feitos com paixão em Maturéia - PB.",
     orderCta: "Pedir pelo Cardápio Completo (Takeat)",
+    fullMenuCta: "Ver cardápio completo e pedir no Takeat",
+    deliveryNote: "Delivery e retirada, terça a domingo, 18h às 22h",
     categories: [
       {
         id: "hamburguer",

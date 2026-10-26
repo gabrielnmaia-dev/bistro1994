@@ -44,4 +44,12 @@ body {
     -webkit-text-stroke: 1px rgba(244, 239, 230, 0.35);
     color: transparent;
   }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }

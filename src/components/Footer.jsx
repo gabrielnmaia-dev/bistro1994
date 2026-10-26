@@ -1,4 +1,5 @@
 import config from "../config";
+import { trackEvent } from "../lib/track";
 
 export default function Footer() {
   return (
@@ -23,6 +24,9 @@ export default function Footer() {
               href={config.orderLink}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() =>
+                trackEvent("pedir_takeat", { origem: "footer" })
+              }
               className="text-gold hover:text-fire font-bold transition-colors"
             >
               Pedir pelo Takeat
