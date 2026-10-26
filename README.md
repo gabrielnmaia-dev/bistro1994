@@ -13,7 +13,7 @@ npm run build    # build de produção em /dist
 npm run preview  # pré-visualizar o build localmente
 ```
 
-**Nota sobre o CSS:** Como o plugin `@tailwindcss/vite` não injeta o CSS corretamente no modo dev do Vite 7, o projeto gera um arquivo CSS estático (`public/tailwind.css`) via PostCSS, referenciado no `index.html`. Após editar `src/index.css`, rode `npx postcss src/index.css -o public/tailwind.css` para regenerar.
+**Nota sobre o CSS:** O Tailwind CSS é processado via PostCSS (`postcss.config.js`) e empacotado automaticamente pelo Vite no bundle CSS (`dist/assets/*.css`). Não há dependência de arquivos CSS externos — o `index.html` referencia o CSS gerado pelo Vite diretamente. Após editar `src/index.css`, basta rodar `npm run build` para regenerar.
 
 Deploy em Vercel, Netlify ou GitHub Pages (build estático, sem backend).
 
