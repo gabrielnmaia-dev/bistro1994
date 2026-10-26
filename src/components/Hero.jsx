@@ -90,11 +90,21 @@ export default function Hero() {
           </p>
 
           <div className="hero-layer flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
-            <a href={config.hero.primaryCta.href} className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-gold text-oil-dark font-bold uppercase tracking-widest text-sm md:text-base rounded-none hover:bg-fire transition-colors duration-300 shadow-[0_0_20px_rgba(245,168,0,0.4)]">
+            <a
+              href={config.hero.primaryCta.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-gold text-oil-dark font-bold uppercase tracking-widest text-sm md:text-base rounded-none hover:bg-fire transition-colors duration-300 shadow-[0_0_20px_rgba(245,168,0,0.4)]"
+            >
               {config.hero.primaryCta.label}
               <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </a>
-            <a href={config.hero.secondaryCta.href} className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-gold/40 text-gold font-bold uppercase tracking-widest text-sm md:text-base rounded-none hover:bg-gold/10 transition-colors duration-300 backdrop-blur-sm">
+            <a
+              href={config.hero.secondaryCta.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-gold/40 text-gold font-bold uppercase tracking-widest text-sm md:text-base rounded-none hover:bg-gold/10 transition-colors duration-300 backdrop-blur-sm"
+            >
               {config.hero.secondaryCta.label}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
             </a>

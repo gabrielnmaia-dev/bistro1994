@@ -20,6 +20,14 @@ export default function Footer() {
 
           <div className="flex flex-col sm:flex-row gap-4 text-sm text-cream/70">
             <a
+              href={config.orderLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold hover:text-fire font-bold transition-colors"
+            >
+              Pedir pelo Takeat
+            </a>
+            <a
               href={config.instagramLink}
               target="_blank"
               rel="noopener noreferrer"
@@ -29,15 +37,18 @@ export default function Footer() {
             </a>
             <a
               href={config.whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-gold transition-colors"
             >
               WhatsApp
             </a>
-            <span>Horário: ter a dom, 18h às 22h</span>
+            <span>Ter a Dom, 18h às 22h</span>
           </div>
 
-          <div className="text-xs text-cream/50 uppercase tracking-widest">
-            Feito com 🔥 em Matureia - PB
+          <div className="text-xs text-cream/60 uppercase tracking-widest text-center md:text-right">
+            <span>{config.address.street}, Maturéia - PB</span>
+            <span className="block mt-1 text-cream/40">Feito com 🔥 em Maturéia - PB</span>
           </div>
         </div>
       </div>

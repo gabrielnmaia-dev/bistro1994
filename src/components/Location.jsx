@@ -17,10 +17,10 @@ export default function Location() {
 
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-6xl font-display uppercase text-cream mb-3">
-            BOA VISTA?
+            {config.location.title || "ONDE ESTAMOS"}
           </h2>
           <p className="text-xl font-serif italic text-fire max-w-2xl mx-auto">
-            A gente te espera aqui em Matureia - PB.
+            A gente te espera aqui na Av. José Jerônimo da Silva, 736 — Maturéia - PB.
           </p>
         </div>
 

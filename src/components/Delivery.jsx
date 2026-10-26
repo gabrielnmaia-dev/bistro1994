@@ -16,6 +16,8 @@ export default function Delivery() {
               <p className="text-cream/80 text-lg leading-relaxed mb-8">{config.delivery.description}</p>
               <a
                 href={config.orderLink}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-8 py-3 bg-gold text-oil-dark font-bold uppercase tracking-widest text-sm hover:bg-fire transition-colors duration-300 shadow-[0_0_20px_rgba(245,168,0,0.4)]"
               >
                 Pedir pelo delivery
@@ -32,6 +34,8 @@ export default function Delivery() {
               <p className="text-cream/80 text-lg leading-relaxed mb-8">{config.reservation.description}</p>
               <a
                 href={config.whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-8 py-3 border border-gold/40 text-gold font-bold uppercase tracking-widest text-sm hover:bg-gold/10 transition-colors duration-300 backdrop-blur-sm"
               >
                 Reservar pelo WhatsApp
