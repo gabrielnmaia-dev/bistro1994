@@ -10,10 +10,27 @@
   --color-gold: #f5a800;
   --color-fire: #ff8a00;
   --color-cream: #f4efe6;
+
+  /* Animação de entrada usada nos textos que trocam (ex.: fases da pizza) */
+  --animate-fade-up: fade-up 0.5s ease-out;
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 html {
   scroll-behavior: auto;
+  color-scheme: dark;
+  /* Âncoras não ficam escondidas atrás das abas sticky do cardápio */
+  scroll-padding-top: 7rem;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -25,6 +42,10 @@ body {
   color: var(--color-oil-dark);
 }
 
+/* ---------- Scrollbar (padrão + fallback WebKit) ---------- */
+html {
+  scrollbar-color: var(--color-oil) var(--color-oil-dark);
+}
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -39,6 +60,44 @@ body {
   background: var(--color-gold);
 }
 
+/* ---------- Foco visível (WCAG 2.4.7 / 1.4.11) ---------- */
+:where(a:any-link, button, [tabindex]:not([tabindex="-1"]), iframe, summary):focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+/* Elementos com fundo dourado: anel creme para manter contraste */
+:where(.bg-gold, .bg-fire):focus-visible {
+  outline-color: var(--color-cream);
+}
+/* Alvos de foco programático (títulos de seção) não exibem anel */
+[tabindex="-1"]:focus {
+  outline: none;
+}
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 2px solid CanvasText;
+  }
+}
+
+/* ---------- Alvos de toque maiores em telas touch (WCAG 2.5.8) ---------- */
+@media (pointer: coarse) {
+  :where(a:any-link, button) {
+    touch-action: manipulation;
+  }
+}
+
+/* ---------- Movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @layer utilities {
   .text-stroke-cream {
     -webkit-text-stroke: 1px rgba(244, 239, 230, 0.35);
@@ -51,5 +110,10 @@ body {
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Espaço para a barra fixa do mobile + área segura do iPhone */
+  .pb-safe {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
   }
 }

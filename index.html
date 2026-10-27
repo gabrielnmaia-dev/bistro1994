@@ -11,6 +11,10 @@
       content="Bistrô1994 em Matureia - PB. Cozinha regional contemporânea, pratos artesanais preparados na hora. Hamburgueres gourmet, porções, pratos regionais e delivery. Aberto terça a domingo das 18h às 22h."
     />
     <meta name="theme-color" content="#0b2b26" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- Imagem do hero (LCP): descoberta antes do bundle JS -->
+    <link rel="preload" as="image" href="/photos/hamburguer-close.webp" type="image/webp" fetchpriority="high" />
 
     <link rel="canonical" href="https://bistro1994.com.br/" />
 
@@ -85,6 +89,16 @@
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <div style="padding:2rem;font-family:system-ui,sans-serif;background:#0b2b26;color:#f4efe6;text-align:center">
+        <h1>Bistrô1994 — Maturéia - PB</h1>
+        <p>Terça a domingo, 18h às 22h · Av. José Jerônimo da Silva, 736</p>
+        <p>
+          <a style="color:#f5a800" href="https://pedido.takeat.app/bistro1994">Fazer pedido</a> ·
+          <a style="color:#f5a800" href="https://wa.me/5583998752113">WhatsApp</a>
+        </p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

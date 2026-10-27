@@ -2,25 +2,32 @@ import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import config from "../config";
+import { prefersReducedMotion } from "../lib/scroll";
+import { NewTab } from "./ui";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Testimonials() {
   const ref = useRef(null);
+  const starCount = config.testimonials.stars.length;
 
   useEffect(() => {
+    if (prefersReducedMotion()) return;
+
     const ctx = gsap.context(() => {
       gsap.from(".testimonial-card", {
         scrollTrigger: {
           trigger: ref.current,
           start: "top 80%",
-          toggleActions: "play none none reverse",
+          // Anima uma única vez: os cards não somem ao rolar de volta
+          once: true,
         },
-        y: 60,
+        y: 40,
         opacity: 0,
-        duration: 0.8,
-        stagger: 0.2,
+        duration: 0.7,
+        stagger: 0.12,
         ease: "power3.out",
+        clearProps: "transform,opacity",
       });
     }, ref);
 
@@ -28,59 +35,73 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section ref={ref} className="py-20 md:py-32 bg-oil-dark relative overflow-hidden">
-      {/* Decorative border */}
-      <div className="absolute inset-0 border border-gold/10 pointer-events-none" />
+    <section
+      ref={ref}
+      id="depoimentos"
+      aria-labelledby="depoimentos-title"
+      className="relative overflow-hidden bg-oil-dark py-20 md:py-32"
+    >
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 border border-gold/10" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 text-center">
-        <h2 className="text-4xl md:text-6xl font-display uppercase text-cream mb-3">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 text-center md:px-8">
+        <h2
+          id="depoimentos-title"
+          className="mb-3 text-balance font-display text-4xl uppercase text-cream md:text-6xl"
+        >
           {config.testimonials.title}
         </h2>
-        <p className="text-xl font-serif italic text-fire mb-12 max-w-2xl mx-auto">
+        <p className="mx-auto mb-12 max-w-2xl text-balance font-serif text-xl italic text-fire">
           {config.testimonials.subtitle}
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {config.testimonials.items.map((t, i) => (
-            <div key={i} className="testimonial-card relative group p-6 md:p-8 bg-oil/80 border border-gold/20 rounded-3xl backdrop-blur-sm hover:border-gold/50 transition-all duration-300">
-              {/* Prato ao fundo */}
-              <div className="absolute inset-0 z-0 rounded-3xl overflow-hidden opacity-30 group-hover:opacity-50 transition-opacity duration-500">
-                <img
-                  src={t.src}
-                  alt={`Prato do depoimento de ${t.name}`}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
+        <ul className="grid grid-cols-1 gap-6 text-left sm:grid-cols-2 md:gap-8 lg:grid-cols-4">
+          {config.testimonials.items.map((t) => (
+            <li key={t.name} className="testimonial-card">
+              <figure className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-gold/20 bg-oil/80 p-6 transition-colors duration-300 hover:border-gold/50 md:p-8">
+                {/* Prato ao fundo (decorativo) + véu para manter o contraste do texto */}
+                <div aria-hidden="true" className="absolute inset-0 z-0">
+                  <img
+                    src={t.src}
+                    alt=""
+                    className="h-full w-full object-cover opacity-30 transition-opacity duration-500 group-hover:opacity-45"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-oil-dark via-oil-dark/80 to-oil-dark/40" />
+                </div>
 
-              {/* Estrelas */}
-              <div className="relative z-10 mb-4 flex justify-center gap-1 text-gold">
-                {config.testimonials.stars.split("").map((star, s) => (
-                  <span key={s} className="text-2xl">
-                    {star}
-                  </span>
-                ))}
-              </div>
+                <div
+                  role="img"
+                  aria-label={`Avaliação: ${starCount} de 5 estrelas`}
+                  className="relative z-10 mb-4 flex gap-1 text-xl text-gold"
+                >
+                  {config.testimonials.stars.split("").map((star, s) => (
+                    <span key={s} aria-hidden="true">
+                      {star}
+                    </span>
+                  ))}
+                </div>
 
-              <blockquote className="relative z-10 mb-6 text-cream/90 font-serif italic text-lg md:text-xl leading-relaxed">
-                “{t.text}”
-              </blockquote>
+                <blockquote className="relative z-10 mb-6 flex-1 font-serif text-lg italic leading-relaxed text-cream md:text-xl">
+                  <p>“{t.text}”</p>
+                </blockquote>
 
-              <cite className="relative z-10 block text-sm font-bold tracking-widest text-gold uppercase">
-                {t.name}
-              </cite>
-            </div>
+                <figcaption className="relative z-10 text-sm font-bold uppercase tracking-widest text-gold">
+                  {t.name}
+                </figcaption>
+              </figure>
+            </li>
           ))}
-        </div>
+        </ul>
 
         <a
-          href={config.INSTAGRAM_LINK}
+          href={config.instagramLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-12 inline-block text-xs md:text-sm font-bold text-gold uppercase tracking-widest hover:text-fire transition-colors"
+          className="mt-12 inline-flex min-h-11 items-center gap-2 px-2 text-xs font-bold uppercase tracking-widest text-gold underline-offset-8 transition-colors hover:text-fire hover:underline md:text-sm"
         >
-          {config.testimonials.instagramCta} →
+          {config.testimonials.instagramCta} <span aria-hidden="true">→</span>
+          <NewTab />
         </a>
       </div>
     </section>

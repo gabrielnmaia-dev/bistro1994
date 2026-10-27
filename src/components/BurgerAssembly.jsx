@@ -3,6 +3,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import config from "../config";
 import { trackEvent } from "../lib/track";
+import { Emoji, NewTab } from "./ui";
+import burgerData from "../data/burger-layers.json";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -10,6 +12,14 @@ gsap.registerPlugin(ScrollTrigger);
 const ENTRY_END = 0.52;
 const EXPLODE_START = 0.56;
 const CLOSE_START = 0.8;
+
+/* O manifesto das camadas é importado direto no bundle (sem fetch).
+   Antes ele vinha de /burger/layers.json via fetch; quando o pizza.json
+   chegava primeiro, a seção da pizza calculava o pin com a página ainda
+   sem o espaçador do hambúrguer e acabava cobrindo ele pela metade. */
+const LAYERS = burgerData.layers || [];
+const PARTICLES = burgerData.particles?.file || null;
+const CANVAS = burgerData.canvas || { width: 938, height: 1128 };
 
 const LAYER_TEXTS = [
   { lead: "Pão brioche", highlight: "tostado", alt: "Pão brioche tostado" },
@@ -35,45 +45,20 @@ export default function BurgerAssembly() {
   const layersRef = useRef([]);
   const particlesRef = useRef(null);
 
-  const [layers, setLayers] = useState([]);
-  const [particles, setParticles] = useState(null);
-  const [canvas, setCanvas] = useState({ width: 938, height: 1128 });
+  const layers = LAYERS;
+  const particles = PARTICLES;
+  const canvas = CANVAS;
   const [progress, setProgress] = useState(0);
 
-  /* Carrega o manifesto e pré-carrega os webp */
+  /* Pré-carrega os webp (o layout não depende deles: o palco tem aspect-ratio fixo) */
   useEffect(() => {
-    let cancelled = false;
-
-    async function loadLayers() {
-      try {
-        const res = await fetch("/burger/layers.json");
-        const data = await res.json();
-        if (cancelled) return;
-
-        const camadas = data.layers || [];
-        setLayers(camadas);
-        setParticles(data.particles?.file || null);
-        if (data.canvas?.width && data.canvas?.height) {
-          setCanvas(data.canvas);
-        }
-
-        // Pré-carrega todas as imagens antes/durante a animação
-        const urls = camadas.map((layer) => `/burger/${layer.file}`);
-        if (data.particles?.file) urls.push(`/burger/${data.particles.file}`);
-        urls.forEach((url) => {
-          const img = new Image();
-          img.src = url;
-        });
-      } catch (e) {
-        console.error("Erro ao carregar layers do hambúrguer:", e);
-      }
-    }
-
-    loadLayers();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    const urls = layers.map((layer) => `/burger/${layer.file}`);
+    if (particles) urls.push(`/burger/${particles}`);
+    urls.forEach((url) => {
+      const img = new Image();
+      img.src = url;
+    });
+  }, [layers, particles]);
 
   useLayoutEffect(() => {
     if (!layers.length) return;
@@ -156,6 +141,8 @@ export default function BurgerAssembly() {
             anticipatePin: 1,
             scrub: 1,
             invalidateOnRefresh: true,
+            // Burger vem antes da pizza no DOM: calcula o pin primeiro
+            refreshPriority: 2,
             onUpdate: (self) => {
               const value = Math.round(self.progress * 100) / 100;
               setProgress(value);
@@ -260,15 +247,7 @@ export default function BurgerAssembly() {
     );
 
     return () => mm.revert();
-  }, [layers, particles, canvas.width]);
-
-  if (!layers.length) {
-    return (
-      <section className="py-32 md:py-64 text-center bg-oil-dark">
-        <p className="text-cream/50">Carregando montagem do hambúrguer...</p>
-      </section>
-    );
-  }
+  }, []);
 
   const entryRatio = Math.min(progress / ENTRY_END, 1);
   const activeIndex = Math.min(
@@ -292,7 +271,7 @@ export default function BurgerAssembly() {
       </h2>
 
       {/* Brilho de fundo */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-fire/10 blur-[120px]" />
+      <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-fire/10 blur-[120px]" />
 
       {/* Palco: canvas 938x1128, centralizado, altura máx ~85svh */}
       <div className="relative z-10 flex h-full w-full items-center justify-center">
@@ -332,6 +311,7 @@ export default function BurgerAssembly() {
 
       {/* Textos laterais — um por camada */}
       <div
+        aria-hidden="true"
         className={`pointer-events-none absolute inset-x-0 bottom-24 z-20 px-6 text-center transition-all duration-500 md:inset-y-0 md:left-[5vw] md:right-auto md:flex md:w-[26vw] md:flex-col md:justify-center md:px-0 md:text-left ${
           showText
             ? "translate-y-0 opacity-100"
@@ -352,11 +332,12 @@ export default function BurgerAssembly() {
 
       {/* Dica de scroll */}
       <div
+        aria-hidden="true"
         className={`pointer-events-none absolute inset-x-0 top-8 z-20 flex flex-col items-center gap-2 transition-opacity duration-500 md:top-auto md:bottom-8 ${
           showHint ? "opacity-100" : "opacity-0"
         }`}
       >
-        <span className="text-[11px] uppercase tracking-[0.35em] text-cream/50">
+        <span className="text-[11px] uppercase tracking-[0.35em] text-cream/70">
           Role para montar
         </span>
         <span className="h-8 w-px bg-gradient-to-b from-gold/70 to-transparent" />
@@ -374,12 +355,15 @@ export default function BurgerAssembly() {
           href={config.orderLink}
           target="_blank"
           rel="noopener noreferrer"
+          tabIndex={showCta ? 0 : -1}
+          aria-hidden={!showCta}
           onClick={() =>
             trackEvent("pedir_takeat", { origem: "montagem_hamburguer" })
           }
-          className="inline-flex items-center gap-2 bg-fire px-8 py-4 text-sm font-bold uppercase tracking-widest text-cream shadow-[0_0_25px_rgba(255,138,0,0.5)] transition-colors duration-300 hover:bg-gold md:text-base"
+          className="inline-flex min-h-12 items-center gap-2 bg-fire px-8 py-4 text-sm font-bold uppercase tracking-widest text-oil-dark shadow-[0_0_25px_rgba(255,138,0,0.5)] transition-colors duration-300 hover:bg-gold md:text-base"
         >
-          Peça o seu 🍔
+          Peça o seu <Emoji>🍔</Emoji>
+          <NewTab />
         </a>
       </div>
     </section>

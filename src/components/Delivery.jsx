@@ -1,20 +1,31 @@
 import config from "../config";
 import { trackEvent } from "../lib/track";
+import { ArrowRightIcon, ChatIcon, NewTab } from "./ui";
 
 export default function Delivery() {
   return (
-    <section className="py-20 md:py-32 bg-oil-dark relative overflow-hidden">
-      <div className="absolute inset-0 border-t border-b border-gold/10 pointer-events-none" />
+    <section
+      id="delivery"
+      aria-labelledby="delivery-title"
+      className="relative overflow-hidden bg-oil-dark py-20 md:py-32"
+    >
+      <h2 id="delivery-title" className="sr-only">
+        Delivery e reservas
+      </h2>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 border-b border-t border-gold/10" />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-
+      <div className="relative z-10 mx-auto max-w-5xl px-4 md:px-8">
+        <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 md:gap-12">
           {/* Delivery card */}
-          <div className="group relative p-8 md:p-12 rounded-3xl border border-gold/20 bg-oil/60 backdrop-blur-sm hover:border-gold/50 transition-all duration-300 overflow-hidden">
-            <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-gold/10 rounded-full blur-2xl group-hover:bg-gold/20 transition-all duration-500" />
-            <div className="relative z-10">
-              <h3 className="text-3xl md:text-4xl font-display uppercase text-cream mb-3">{config.delivery.title}</h3>
-              <p className="text-cream/80 text-lg leading-relaxed mb-8">{config.delivery.description}</p>
+          <div className="group relative flex flex-col overflow-hidden rounded-3xl border border-gold/20 bg-oil/60 p-8 backdrop-blur-sm transition-colors duration-300 hover:border-gold/50 md:p-12">
+            <div aria-hidden="true" className="absolute right-0 top-0 -mr-8 -mt-8 h-32 w-32 rounded-full bg-gold/10 blur-2xl transition-colors duration-500 group-hover:bg-gold/20" />
+            <div className="relative z-10 flex flex-1 flex-col">
+              <h3 className="mb-3 font-display text-3xl uppercase text-cream md:text-4xl">
+                {config.delivery.title}
+              </h3>
+              <p className="mb-8 text-lg leading-relaxed text-cream/80">
+                {config.delivery.description}
+              </p>
               <a
                 href={config.orderLink}
                 target="_blank"
@@ -22,28 +33,37 @@ export default function Delivery() {
                 onClick={() =>
                   trackEvent("pedir_takeat", { origem: "delivery" })
                 }
-                className="inline-flex items-center gap-2 px-8 py-3 bg-gold text-oil-dark font-bold uppercase tracking-widest text-sm hover:bg-fire transition-colors duration-300 shadow-[0_0_20px_rgba(245,168,0,0.4)]"
+                className="group/cta mt-auto inline-flex min-h-12 items-center justify-center gap-2 self-start bg-gold px-8 py-3 text-sm font-bold uppercase tracking-widest text-oil-dark shadow-[0_0_20px_rgba(245,168,0,0.4)] transition-colors duration-300 hover:bg-fire"
               >
                 Pedir pelo delivery
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                <ArrowRightIcon className="h-4 w-4 transition-transform motion-safe:group-hover/cta:translate-x-1" />
+                <NewTab />
               </a>
             </div>
           </div>
 
           {/* Reserva card */}
-          <div className="group relative p-8 md:p-12 rounded-3xl border border-fire/20 bg-oil/60 backdrop-blur-sm hover:border-fire/50 transition-all duration-300 overflow-hidden">
-            <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-fire/10 rounded-full blur-2xl group-hover:bg-fire/20 transition-all duration-500" />
-            <div className="relative z-10">
-              <h3 className="text-3xl md:text-4xl font-display uppercase text-cream mb-3">{config.reservation.title}</h3>
-              <p className="text-cream/80 text-lg leading-relaxed mb-8">{config.reservation.description}</p>
+          <div className="group relative flex flex-col overflow-hidden rounded-3xl border border-fire/20 bg-oil/60 p-8 backdrop-blur-sm transition-colors duration-300 hover:border-fire/50 md:p-12">
+            <div aria-hidden="true" className="absolute right-0 top-0 -mr-8 -mt-8 h-32 w-32 rounded-full bg-fire/10 blur-2xl transition-colors duration-500 group-hover:bg-fire/20" />
+            <div className="relative z-10 flex flex-1 flex-col">
+              <h3 className="mb-3 font-display text-3xl uppercase text-cream md:text-4xl">
+                {config.reservation.title}
+              </h3>
+              <p className="mb-8 text-lg leading-relaxed text-cream/80">
+                {config.reservation.description}
+              </p>
               <a
                 href={config.whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-3 border border-gold/40 text-gold font-bold uppercase tracking-widest text-sm hover:bg-gold/10 transition-colors duration-300 backdrop-blur-sm"
+                onClick={() =>
+                  trackEvent("whatsapp", { origem: "reserva" })
+                }
+                className="mt-auto inline-flex min-h-12 items-center justify-center gap-2 self-start border border-gold/40 px-8 py-3 text-sm font-bold uppercase tracking-widest text-gold backdrop-blur-sm transition-colors duration-300 hover:border-gold hover:bg-gold/10"
               >
+                <ChatIcon className="h-4 w-4" />
                 Reservar pelo WhatsApp
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                <NewTab />
               </a>
             </div>
           </div>

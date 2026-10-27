@@ -1,96 +1,103 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { getBusinessHours } from "../lib/hours";
 import { trackEvent } from "../lib/track";
+import { useBusinessHours } from "../lib/useBusinessHours";
+import { prefersReducedMotion } from "../lib/scroll";
+import { ArrowRightIcon, LogoMark, MapPinIcon, NewTab, OpenStatus } from "./ui";
 import config from "../config";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
   const ref = useRef(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const hours = useBusinessHours();
 
   useEffect(() => {
-    const { isOpen: open } = getBusinessHours();
-    setIsOpen(open);
-  }, []);
+    if (prefersReducedMotion()) return;
 
-  useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".hero-layer", {
-        y: 60,
+        y: 40,
         opacity: 0,
-        duration: 1,
-        stagger: 0.1,
+        duration: 0.9,
+        stagger: 0.08,
         ease: "power3.out",
+        clearProps: "transform,opacity",
       });
     }, ref);
 
     return () => ctx.revert();
   }, []);
 
+  const [titleBefore, titleAfter = ""] = config.hero.title.split(
+    config.hero.titleHighlight
+  );
+
   return (
-    <section ref={ref} className="relative min-h-[70vh] md:min-h-[90vh] overflow-hidden">
-      {/* Hero background image */}
-      <div className="absolute inset-0 z-0">
+    <section
+      ref={ref}
+      aria-labelledby="hero-title"
+      className="relative flex min-h-[85svh] flex-col overflow-hidden md:min-h-[90vh]"
+    >
+      {/* Fundo (decorativo) — candidato a LCP: prioridade alta */}
+      <div className="absolute inset-0 z-0" aria-hidden="true">
         <img
           src="/photos/hamburguer-close.webp"
-          alt="Fundo do hero - hamburguer artesanal"
-          className="w-full h-full object-cover"
+          alt=""
+          className="h-full w-full object-cover"
           loading="eager"
+          fetchPriority="high"
           decoding="async"
         />
         <div className="absolute inset-0 bg-oil-dark/70" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(11,43,38,0.9)_80%)]" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 w-full h-full flex flex-col justify-center px-4 md:px-8 sm:px-12 pt-20 pb-12 md:pt-32">
+      {/* Conteúdo */}
+      <div className="relative z-10 flex w-full flex-1 flex-col justify-center px-4 pb-16 pt-10 sm:px-8 md:pt-16">
         {/* Logo */}
-        <div className="flex justify-center mb-12 hero-layer">
-          <a href="/" className="inline-flex items-center gap-2 text-gold transition-transform hover:scale-105 duration-300">
-            <svg
-              width="36"
-              height="36"
-              viewBox="0 0 36 36"
-              fill="none"
-              className="w-8 h-8 drop-shadow-[0_0_12px_rgba(245,168,0,0.6)]"
-            >
-              <path d="M18 2C9.4 2 2 9.4 2 18s7.4 16 16 16 16-7.4 16-16S26.6 2 18 2ZM18 32c-7.73 0-14-6.27-14-14S10.27 4 18 4s14 6.27 14 14-6.27 14-14 14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M12 18h12c0 2.2-1.8 4-4 4H16c-2.2 0-4-1.8-4-4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span className="text-2xl font-serif italic tracking-wider uppercase">bistrô 1994</span>
+        <div className="hero-layer mb-10 flex justify-center md:mb-12">
+          <a
+            href="/"
+            aria-label="Bistrô 1994 — página inicial"
+            className="inline-flex items-center gap-2 text-gold transition-transform duration-300 motion-safe:hover:scale-105"
+          >
+            <LogoMark className="h-8 w-8 drop-shadow-[0_0_12px_rgba(245,168,0,0.6)]" />
+            <span className="font-serif text-2xl uppercase italic tracking-wider">
+              bistrô 1994
+            </span>
           </a>
         </div>
 
-        {/* Main text */}
-        <div className="relative max-w-full text-center space-y-6">
+        <div className="relative mx-auto max-w-6xl space-y-6 text-center">
           <div className="hero-layer">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 text-gold text-xs uppercase tracking-widest font-bold shadow-[0_0_15px_rgba(245,168,0,0.3)] animate-pulse">
+            <span className="inline-block rounded-full border border-gold/30 bg-gold/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-gold shadow-[0_0_15px_rgba(245,168,0,0.3)]">
               {config.hero.badge}
             </span>
           </div>
 
-          <h1 className="hero-layer text-5xl md:text-8xl lg:text-[10rem] font-display uppercase text-cream leading-tight mb-4 drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
-            {(() => {
-              const parts = config.hero.title.split(config.hero.titleHighlight);
-              return (
-                <>
-                  {parts[0]}
-                  <span className="text-fire italic drop-shadow-[0_2px_4px_rgba(255,138,0,0.4)]">
-                    {config.hero.titleHighlight}
-                  </span>
-                  {parts[1] || ""}
-                </>
-              );
-            })()}
+          <h1
+            id="hero-title"
+            className="hero-layer text-balance font-display text-5xl uppercase leading-[0.95] text-cream drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] sm:text-6xl md:text-8xl lg:text-[9rem]"
+          >
+            {titleBefore}
+            <span className="italic text-fire drop-shadow-[0_2px_4px_rgba(255,138,0,0.4)]">
+              {config.hero.titleHighlight}
+            </span>
+            {titleAfter}
           </h1>
-          <p className="hero-layer text-2xl md:text-4xl font-serif italic text-fire drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">
+
+          <p className="hero-layer text-balance font-serif text-2xl italic text-fire drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] md:text-4xl">
             {config.hero.subtitle}
           </p>
 
-          <div className="hero-layer flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+          {/* Status de funcionamento — informação-chave antes do clique */}
+          <div className="hero-layer flex justify-center pt-2">
+            <OpenStatus hours={hours} />
+          </div>
+
+          <div className="hero-layer flex flex-col items-stretch justify-center gap-3 pt-2 sm:flex-row sm:items-center sm:gap-4">
             <a
               href={config.hero.primaryCta.href}
               target="_blank"
@@ -98,42 +105,40 @@ export default function Hero() {
               onClick={() =>
                 trackEvent("pedir_takeat", { origem: "hero_principal" })
               }
-              className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-gold text-oil-dark font-bold uppercase tracking-widest text-sm md:text-base rounded-none hover:bg-fire transition-colors duration-300 shadow-[0_0_20px_rgba(245,168,0,0.4)]"
+              className="group inline-flex min-h-12 items-center justify-center gap-2 bg-gold px-8 py-4 text-sm font-bold uppercase tracking-widest text-oil-dark shadow-[0_0_20px_rgba(245,168,0,0.4)] transition-colors duration-300 hover:bg-fire md:text-base"
             >
               {config.hero.primaryCta.label}
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              <ArrowRightIcon className="h-4 w-4 transition-transform motion-safe:group-hover:translate-x-1" />
+              <NewTab />
             </a>
             <a
               href={config.hero.secondaryCta.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-gold/40 text-gold font-bold uppercase tracking-widest text-sm md:text-base rounded-none hover:bg-gold/10 transition-colors duration-300 backdrop-blur-sm"
+              onClick={() =>
+                trackEvent("como_chegar", { origem: "hero_secundario" })
+              }
+              className="inline-flex min-h-12 items-center justify-center gap-2 border border-gold/40 px-8 py-4 text-sm font-bold uppercase tracking-widest text-gold backdrop-blur-sm transition-colors duration-300 hover:border-gold hover:bg-gold/10 md:text-base"
             >
+              <MapPinIcon className="h-4 w-4" />
               {config.hero.secondaryCta.label}
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+              <NewTab />
             </a>
           </div>
-
-          {/* Status */}
-          <div className="hero-layer mt-10 flex items-center justify-center gap-3 animate-bounce">
-            <div className={`w-3 h-3 rounded-full ${isOpen ? "bg-gold" : "bg-fire"} shadow-[0_0_12px_${isOpen ? "rgba(245,168,0,0.6)" : "rgba(255,138,0,0.6)"}]`} />
-            <span className={`text-xs uppercase tracking-widest font-bold ${isOpen ? "text-gold" : "text-fire"} opacity-90`}>
-              {isOpen ? config.hours.openLabel : config.hours.closedLabel}
-            </span>
-            <span className={`text-xs uppercase tracking-widest font-bold text-gold/70`}>
-              até {config.hours.closeTime}
-            </span>
-          </div>
-
-          <p className="hero-layer mt-8 text-gold/50 text-sm tracking-[0.3em] uppercase">
-            {config.hero.scrollHint} ↓
-          </p>
         </div>
       </div>
 
-      {/* Decorative corner elements */}
-      <div className="absolute top-0 right-0 w-24 h-24 border-t-2 border-r-2 border-gold/20 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-24 h-24 border-b-2 border-l-2 border-gold/20 pointer-events-none" />
+      {/* Dica de scroll */}
+      <p className="hero-layer relative z-10 pb-8 text-center text-xs uppercase tracking-[0.3em] text-cream/60">
+        {config.hero.scrollHint}{" "}
+        <span aria-hidden="true" className="inline-block motion-safe:animate-bounce">
+          ↓
+        </span>
+      </p>
+
+      {/* Cantos decorativos */}
+      <div aria-hidden="true" className="pointer-events-none absolute right-0 top-0 h-24 w-24 border-r-2 border-t-2 border-gold/20" />
+      <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-0 h-24 w-24 border-b-2 border-l-2 border-gold/20" />
     </section>
   );
 }

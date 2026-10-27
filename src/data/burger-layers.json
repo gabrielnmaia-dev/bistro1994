@@ -1,0 +1,62 @@
+{
+  "canvas": {
+    "width": 938,
+    "height": 1128
+  },
+  "stack": "bottom-to-top",
+  "note": "Todas as camadas tem o mesmo canvas (938x1128) e se empilham em position:absolute top:0 left:0. Posicao 'explodida' = translateY(0) (igual a foto original). 'closeOffsetY' = quanto cada camada desce (px, na escala do canvas) para fechar o hamburguer. 08-particulas e opcional e anima separada (parallax).",
+  "layers": [
+    {
+      "file": "01-pao-baixo.webp",
+      "visibleTopY": 946,
+      "visibleBottomY": 1123,
+      "stackOrder": 1,
+      "closeOffsetY": 0
+    },
+    {
+      "file": "02-alface-molho.webp",
+      "visibleTopY": 792,
+      "visibleBottomY": 1123,
+      "stackOrder": 2,
+      "closeOffsetY": 0
+    },
+    {
+      "file": "03-blend-queijo-2.webp",
+      "visibleTopY": 596,
+      "visibleBottomY": 811,
+      "stackOrder": 3,
+      "closeOffsetY": 16
+    },
+    {
+      "file": "04-crocante-ovo.webp",
+      "visibleTopY": 478,
+      "visibleBottomY": 619,
+      "stackOrder": 4,
+      "closeOffsetY": 32
+    },
+    {
+      "file": "05-bacon.webp",
+      "visibleTopY": 394,
+      "visibleBottomY": 509,
+      "stackOrder": 5,
+      "closeOffsetY": 48
+    },
+    {
+      "file": "06-blend-queijo-1.webp",
+      "visibleTopY": 166,
+      "visibleBottomY": 426,
+      "stackOrder": 6,
+      "closeOffsetY": 64
+    },
+    {
+      "file": "07-pao-cima.webp",
+      "visibleTopY": 0,
+      "visibleBottomY": 250,
+      "stackOrder": 7,
+      "closeOffsetY": 84
+    }
+  ],
+  "particles": {
+    "file": "08-particulas.webp"
+  }
+}

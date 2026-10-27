@@ -1,32 +1,41 @@
 import config from "../config";
 import { trackEvent } from "../lib/track";
+import { BagIcon, MapPinIcon, NewTab } from "./ui";
 
+/**
+ * Barra de ações fixa no mobile (≤ 768px).
+ * Hierarquia clara: "Pedir" é a ação primária (preenchida), "Como chegar" secundária.
+ */
 export default function MobileCTA() {
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-oil/90 backdrop-blur-md border-t border-gold/20">
-      <div className="flex justify-around px-4 py-3">
+    <nav
+      aria-label="Ações rápidas"
+      className="pb-safe fixed inset-x-0 bottom-0 z-50 border-t border-gold/20 bg-oil/95 px-3 pt-3 backdrop-blur-md md:hidden"
+    >
+      <div className="grid grid-cols-2 gap-3">
         <a
           href={config.orderLink}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() =>
-            trackEvent("pedir_takeat", { origem: "mobile_cta" })
-          }
-          className="flex flex-col items-center gap-1 text-gold font-bold uppercase text-[10px] hover:text-fire transition-colors"
+          onClick={() => trackEvent("pedir_takeat", { origem: "mobile_cta" })}
+          className="inline-flex min-h-12 items-center justify-center gap-2 bg-gold px-3 text-sm font-bold uppercase tracking-wider text-oil-dark transition-colors active:bg-fire"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-          Pedir Takeat
+          <BagIcon className="h-5 w-5" />
+          Pedir agora
+          <NewTab />
         </a>
         <a
           href={config.mapsLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex flex-col items-center gap-1 text-cream font-bold uppercase text-[10px] hover:text-gold transition-colors"
+          onClick={() => trackEvent("como_chegar", { origem: "mobile_cta" })}
+          className="inline-flex min-h-12 items-center justify-center gap-2 border border-gold/40 px-3 text-sm font-bold uppercase tracking-wider text-gold transition-colors active:bg-gold/10"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+          <MapPinIcon className="h-5 w-5" />
           Como chegar
+          <NewTab />
         </a>
       </div>
-    </div>
+    </nav>
   );
 }

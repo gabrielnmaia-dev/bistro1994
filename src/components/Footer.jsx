@@ -1,58 +1,73 @@
 import config from "../config";
 import { trackEvent } from "../lib/track";
+import { formatHour } from "../lib/hours";
+import { Emoji, LogoMark, NewTab } from "./ui";
 
 export default function Footer() {
+  const year = new Date().getFullYear();
+  const hoursLabel = `Ter a Dom, ${formatHour(config.hours.openTime)} às ${formatHour(
+    config.hours.closeTime
+  )}`;
+
   return (
-    <footer className="border-t border-gold/10 bg-oil-dark py-12 md:py-20">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2 text-gold">
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 28 28"
-              fill="none"
-              className="w-6 h-6 drop-shadow-[0_0_10px_rgba(245,168,0,0.4)]"
-            >
-              <path d="M14 2C7.5 2 2 7.5 2 14s5.5 12 12 12 12-5.5 12-12S20.5 2 14 2ZM14 24c-6.6 0-12-5.4-12-12S7.4 0 14 0s12 5.4 12 12-5.4 12-12 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span className="font-serif italic uppercase tracking-widest text-lg">bistrô 1994</span>
-          </div>
+    // pb extra no mobile para o conteúdo não ficar atrás da barra fixa (MobileCTA)
+    <footer className="border-t border-gold/10 bg-oil-dark pb-28 pt-12 md:py-20">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
+          <a href="/" aria-label="Bistrô 1994 — voltar ao início" className="flex items-center gap-2 text-gold">
+            <LogoMark className="h-6 w-6 drop-shadow-[0_0_10px_rgba(245,168,0,0.4)]" />
+            <span className="font-serif text-lg uppercase italic tracking-widest">bistrô 1994</span>
+          </a>
 
-          <div className="flex flex-col sm:flex-row gap-4 text-sm text-cream/70">
-            <a
-              href={config.orderLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() =>
-                trackEvent("pedir_takeat", { origem: "footer" })
-              }
-              className="text-gold hover:text-fire font-bold transition-colors"
-            >
-              Pedir pelo Takeat
-            </a>
-            <a
-              href={config.instagramLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gold transition-colors"
-            >
-              Instagram
-            </a>
-            <a
-              href={config.whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gold transition-colors"
-            >
-              WhatsApp
-            </a>
-            <span>Ter a Dom, 18h às 22h</span>
-          </div>
+          <nav aria-label="Links do rodapé">
+            <ul className="flex flex-col items-center gap-1 text-sm text-cream/80 sm:flex-row sm:gap-6">
+              <li>
+                <a
+                  href={config.orderLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent("pedir_takeat", { origem: "footer" })}
+                  className="inline-flex min-h-11 items-center font-bold text-gold transition-colors hover:text-fire"
+                >
+                  Pedir pelo Takeat
+                  <NewTab />
+                </a>
+              </li>
+              <li>
+                <a
+                  href={config.instagramLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center transition-colors hover:text-gold"
+                >
+                  Instagram
+                  <NewTab />
+                </a>
+              </li>
+              <li>
+                <a
+                  href={config.whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent("whatsapp", { origem: "footer" })}
+                  className="inline-flex min-h-11 items-center transition-colors hover:text-gold"
+                >
+                  WhatsApp
+                  <NewTab />
+                </a>
+              </li>
+              <li className="inline-flex min-h-11 items-center text-cream/70">{hoursLabel}</li>
+            </ul>
+          </nav>
 
-          <div className="text-xs text-cream/60 uppercase tracking-widest text-center md:text-right">
-            <span>{config.address.street}, Maturéia - PB</span>
-            <span className="block mt-1 text-cream/40">Feito com 🔥 em Maturéia - PB</span>
+          <div className="text-center text-xs uppercase tracking-widest text-cream/70 md:text-right">
+            <address className="not-italic">
+              {config.address.street}, {config.city}
+            </address>
+            <span className="mt-1 block text-cream/60">
+              © {year} {config.name} · Feito com <Emoji>🔥</Emoji>
+              <span className="sr-only">carinho</span> em {config.city}
+            </span>
           </div>
         </div>
       </div>
