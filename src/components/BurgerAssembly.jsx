@@ -89,7 +89,12 @@ export default function BurgerAssembly() {
 
     mm.add(
       {
+        // É preciso haver sempre ao menos uma condição verdadeira para o
+        // callback rodar. Sem "isMobile", no mobile sem reduced-motion
+        // nenhuma condição casava e a timeline nunca era criada (burger
+        // ficava estático e montado).
         isDesktop: "(min-width: 768px)",
+        isMobile: "(max-width: 767px)",
         reduce: "(prefers-reduced-motion: reduce)",
       },
       (context) => {
@@ -327,7 +332,7 @@ export default function BurgerAssembly() {
 
       {/* Textos laterais — um por camada */}
       <div
-        className={`pointer-events-none absolute inset-x-0 bottom-8 z-20 px-6 text-center transition-all duration-500 md:inset-y-0 md:left-[5vw] md:right-auto md:flex md:w-[26vw] md:flex-col md:justify-center md:px-0 md:text-left ${
+        className={`pointer-events-none absolute inset-x-0 bottom-24 z-20 px-6 text-center transition-all duration-500 md:inset-y-0 md:left-[5vw] md:right-auto md:flex md:w-[26vw] md:flex-col md:justify-center md:px-0 md:text-left ${
           showText
             ? "translate-y-0 opacity-100"
             : "translate-y-3 opacity-0"
@@ -359,7 +364,7 @@ export default function BurgerAssembly() {
 
       {/* CTA final */}
       <div
-        className={`absolute bottom-8 left-0 right-0 z-30 flex justify-center transition-all duration-500 ${
+        className={`absolute bottom-24 left-0 right-0 z-30 flex justify-center transition-all duration-500 md:bottom-8 ${
           showCta
             ? "translate-y-0 opacity-100"
             : "pointer-events-none translate-y-4 opacity-0"
